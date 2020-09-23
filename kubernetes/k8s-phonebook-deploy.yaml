@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phonebook-deployment
+  labels:
+    app: phonebook-v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: phonebook-v1
+  template:
+    metadata:
+      labels:
+        app: phonebook-v1
+    spec:
+      containers:
+      - name: phonebook
+        image: talhas/phonebook:latest
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 5000

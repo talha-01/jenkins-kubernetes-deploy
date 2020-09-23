@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: phonebook-v1
+spec: 
+  type: NodePort
+  ports: 
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000 
+    nodePort: 30070
+  selector:
+    app: phonebook-v1
