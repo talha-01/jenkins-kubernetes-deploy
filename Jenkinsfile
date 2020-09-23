@@ -2,6 +2,7 @@ pipeline {
 	agent { label "master" }
 	environment {
 		APP_REPO_NAME = "talhas/phonebook"
+        APP_FILE = fileExists "/home/ubuntu/jenkins-kubernetes-deply"
 	}
 	stages {
 		stage('Build Docker Image') {
@@ -20,14 +21,16 @@ pipeline {
 				}
 			}
 		}
-        stage('Testing') {
+        stage('Check the App File') {
+            when { expression { APP_FILE == 'true' } }
             steps {
-                res = sh(script: "test -d ${target_dir} && echo '1' || echo '0' ", returnStdout: true).trim()
-                    if(res=='1'){
-                        echo 'yes'
-                    } else {
-                        echo 'no'
-                    }
+                echo "file exists"
+            }
+        }
+        stage('Clone the Git File') {
+            when { expression { APP_FILE == 'false' } }
+            steps {
+                git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git
             }
         }
 		stage('Renew deployment') {
