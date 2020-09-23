@@ -22,28 +22,16 @@ pipeline {
 			}
 		}
         stage('Check the App File') {
-            when { 
+            steps { 
                 script {
-				    sshagent(credentials : ['talha-virginia']) {expression { APP_FILE == 'true' } }
+				    sshagent(credentials : ['talha-virginia']) {
+                        sh 'ssh -t -t ubuntu@54.210.214.185 -o StrictHostKeyChecking=no "git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git"'
+                        sh 'ssh -t -t ubuntu@54.210.214.185 -o StrictHostKeyChecking=no "kubectl apply -f jenkins-kubernetes-deploy/kubernetes"'
+                        sh 'ssh -t -t ubuntu@54.210.214.185 -o StrictHostKeyChecking=no "kubectl set image deployment/phonebook-deployment phonebook=talhas/phonebook:${BUILD_ID} --record"'
+                     }
                 }
-            }    
-            steps {
-                sh 'echo "file exists"'
-                sh 'ssh -t -t ubuntu@54.210.214.185 -o StrictHostKeyChecking=no "kubectl set image deployment/phonebook-deployment phonebook=talhas/phonebook:${BUILD_ID} --record"'
-                    
-            
             }
         }
-
-		stage('Renew deployment') {
-			steps {
-				script {
-					sshagent(credentials : ['talha-virginia']) {
-						sh 'ssh -t -t ubuntu@54.210.214.185 -o StrictHostKeyChecking=no "kubectl set image deployment/phonebook-deployment phonebook=talhas/phonebook:${BUILD_ID} --record"'
-					}
-				}
-			}
-		}
 	}
  	post {
         	always {
