@@ -9,7 +9,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: "/home/ec2-user/db_backup"
+    path: "/home/$(whoami)/db_backup"
 
 
 ---
@@ -24,4 +24,3 @@ spec:
   resources:
     requests:
       storage: 2Gi
-      
