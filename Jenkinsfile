@@ -20,15 +20,20 @@ pipeline {
 				}
 			}
 		}
+
+        stage('Testing') {
+            res = sh(script: "test -d ${target_dir} && echo '1' || echo '0' ", returnStdout: true).trim()
+            if(res=='1'){
+                echo 'yes'
+            } else {
+               echo 'no'
+            }
+        }
 		stage('Renew deployment') {
 			steps {
 				script {
 					sshagent(credentials : ['talha-virginia']) {
-						sh "echo pwd"
-						IS_FIRST = sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "kubectl get pods"'
-                        if (IS_FIRST == 'No resources found in default namespace.') {
-                                sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "kubectl get svc"'
-                        }
+						sh 'ssh -t -t ubuntu@54.210.214.185 -o StrictHostKeyChecking=no "kubectl set image deployment/phonebook-deployment phonebook=talhas/phonebook:${BUILD_ID} --record"'
 					}
 				}
 			}
