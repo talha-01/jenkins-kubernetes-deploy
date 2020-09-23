@@ -35,7 +35,7 @@ spec:
     - name: mysql-initdb
       mountPath: /docker-entrypoint-initdb.d
     - name: db-backup
-      mountPath: /home/$(whoami)/db_backup
+      mountPath: /home/ubuntu/db_backup
   volumes: 
   - name: mysql-initdb
     configMap: 

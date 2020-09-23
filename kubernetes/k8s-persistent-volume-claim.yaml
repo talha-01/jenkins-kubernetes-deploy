@@ -9,7 +9,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: "/home/$(whoami)/db_backup"
+    path: "/home/${whoami}/db_backup"
 
 
 ---
