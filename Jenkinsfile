@@ -21,14 +21,14 @@ pipeline {
 			}
 		}
         stage('Testing') {
-          	steps {
+            steps {
                 res = sh(script: "test -d ${target_dir} && echo '1' || echo '0' ", returnStdout: true).trim()
                     if(res=='1'){
                         echo 'yes'
                     } else {
                         echo 'no'
                     }
-                }
+            }
         }
 		stage('Renew deployment') {
 			steps {
