@@ -24,13 +24,13 @@ pipeline {
         stage('Check the App File') {
             when { expression { APP_FILE == 'true' } }
             steps {
-                echo "file exists"
+                sh 'echo "file exists"'
             }
         }
         stage('Clone the Git File') {
             when { expression { APP_FILE == 'false' } }
             steps {
-                git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git
+                sh 'git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git'
             }
         }
 		stage('Renew deployment') {
