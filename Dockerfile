@@ -1,5 +1,5 @@
 FROM python:alpine
-COPY . /app
+COPY ./webserver /app
 WORKDIR /app
 RUN pip install -r requirements.txt
 EXPOSE 5000
