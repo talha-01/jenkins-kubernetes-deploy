@@ -2,7 +2,7 @@ pipeline {
 	agent { label "master" }
 	environment {
 		APP_REPO_NAME = "talhas/phonebook"
-        APP_FILE = fileExists "/home/ubuntu/jenkins-kubernetes-deply"
+        APP_FILE = fileExists "/home/ubuntu/jenkins-kubernetes-deploy"
 	}
 	stages {
 		stage('Build Docker Image') {
@@ -22,16 +22,25 @@ pipeline {
 			}
 		}
         stage('Check the App File') {
-            when { expression { APP_FILE == 'true' } }
-            steps {
-                sh 'echo "file exists"'
-            }
+				script {
+					sshagent(credentials : ['talha-virginia']) {
+                        when { expression { APP_FILE == 'true' } }
+                        steps {
+                            sh 'echo "file exists"'
+                            sh 'ssh -t -t ubuntu@54.210.214.185 -o StrictHostKeyChecking=no "kubectl set image deployment/phonebook-deployment phonebook=talhas/phonebook:${BUILD_ID} --record"'
+                        }
+                    }
+                }
         }
         stage('Clone the Git File') {
-            when { expression { APP_FILE == 'false' } }
-            steps {
-                sh 'git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git'
-            }
+				script {
+					sshagent(credentials : ['talha-virginia']) {
+                        when { expression { APP_FILE == 'false' } }
+                        steps {
+                            sh 'git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git'
+                        }
+                    }
+                }
         }
 		stage('Renew deployment') {
 			steps {
