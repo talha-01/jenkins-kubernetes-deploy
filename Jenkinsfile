@@ -26,9 +26,9 @@ pipeline {
 					sshagent(credentials : ['talha-virginia']) {
 						sh "echo pwd"
 						IS_FIRST = sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "kubectl get pods"'
-                            if (IS_FIRST == 'No resources found in default namespace.') {
+                        if (IS_FIRST == 'No resources found in default namespace.') {
                                 sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "kubectl get svc"'
-                            }
+                        }
 					}
 				}
 			}
