@@ -25,7 +25,7 @@ pipeline {
 				script {
 					sshagent(credentials : ['talha-virginia']) {
 						sh "echo pwd"
-						sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "IS_FIRST=$(kubectl get pods)"'
+						sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "kubectl get pods"'
                         sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "echo $IS_FIRST"'
 					}
 				}
