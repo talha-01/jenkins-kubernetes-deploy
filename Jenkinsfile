@@ -33,7 +33,15 @@ pipeline {
 			steps {
 				script {
 					sshagent(credentials : ['talha-virginia']) {
+<<<<<<< HEAD
 						sh 'ssh -t -t ubuntu@54.210.214.185 -o StrictHostKeyChecking=no "kubectl set image deployment/phonebook-deployment phonebook=talhas/phonebook:${BUILD_ID} --record"'
+=======
+						sh "echo pwd"
+						IS_FIRST = sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "kubectl get pods"'
+                        			if (IS_FIRST == 'No resources found in default namespace.') {
+                                			sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "kubectl get svc"'
+                        			}
+>>>>>>> f03e3285b8714acf018ded9f30cea9cc838cd237
 					}
 				}
 			}
