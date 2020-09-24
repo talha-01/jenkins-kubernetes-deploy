@@ -2,7 +2,6 @@ pipeline {
 	agent { label "master" }
 	environment {
 		APP_REPO_NAME = "talhas/phonebook"
-        APP_FILE = fileExists "/home/ubuntu/jenkins-kubernetes-deploy"
 	}
 	stages {
 		stage('Build Docker Image') {
@@ -21,9 +20,9 @@ pipeline {
 				}
 			}
 		}
-        stage('Check the App File') {
-            steps { 
-                script {
+		stage('Check the App File') {
+			steps { 
+				script {
 				    sshagent(credentials : ['talha-virginia']) {
                         sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git && \
 kubectl apply -f jenkins-kubernetes-deploy/kubernetes || \

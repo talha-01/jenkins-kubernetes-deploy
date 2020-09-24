@@ -65,6 +65,19 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
+  JenkinsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH and open port 8080 for Jenkins server
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
   ManagersSGIngress1:
     Type: "AWS::EC2::SecurityGroupIngress"
     Properties:
@@ -89,6 +102,41 @@ Resources:
       GroupId: !GetAtt WorkersSecurityGroup.GroupId
       IpProtocol: -1 #required
       SourceSecurityGroupId: !GetAtt ManagersSecurityGroup.GroupId
+  WorkersSGIngress3:
+    Type: "AWS::EC2::SecurityGroupIngress"
+    Properties:
+      GroupId: !GetAtt WorkersSecurityGroup.GroupId
+      IpProtocol: tcp #required
+      FromPort: 30070
+      ToPort: 30070
+      CidrIp: 0.0.0.0/0
+  JenkinsServer:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-0947d2ba12ee1ff75
+      InstanceType: t2.micro
+      KeyName: !Ref KeyPairName
+      SecurityGroupIds:
+        - !GetAtt JenkinsSecurityGroup.GroupId
+      Tags:
+        - 
+          Key: Name
+          Value: Jenkins Server for ${AWS::StackName}
+      UserData: 
+        Fn::Base64: |
+          #!/bin/bash
+          yum update -y 
+          wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+          rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+          yum install jenkins -y
+          yum install java -y
+          systemctl start jenkins
+          yum install -y git
+          amazon-linux-extras install docker -y
+          service docker start
+          service docker enable
+          newgrp docker
+          chmod 666 /var/run/docker.sock
   KubeMaster1:
     Type: AWS::EC2::Instance
     Properties:
@@ -195,3 +243,10 @@ Outputs:
     Value: !Sub 
       - ${PrivateAddress}
       - PrivateAddress: !GetAtt KubeWorker1.PrivateDnsName
+  JenkinsDNSName:
+    Description: Jenkins server URL with port number
+    Value: !Join [':', [!GetAtt  JenkinsServer.PublicIp, '8080']]
+  ApplicationURL:
+    Description: The Url which the application will be broadcast
+    Value: !Join [':', [!GetAtt KubeWorker1.PublicIp, '30070']]
+
