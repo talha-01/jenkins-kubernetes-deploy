@@ -23,14 +23,14 @@ pipeline {
 		stage('Check the App File') {
 			steps { 
 				script {
-				    sshagent(credentials : ['talha-virginia']) {
-                        sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git && \
+					sshagent(credentials : ['talha-virginia']) {
+						sh 'ssh -t -t ubuntu@54.197.95.143 -o StrictHostKeyChecking=no "git clone https://github.com/talha-01/jenkins-kubernetes-deploy.git && \
 kubectl apply -f jenkins-kubernetes-deploy/kubernetes || \
 kubectl set image deployment/phonebook-deployment phonebook=talhas/phonebook:${BUILD_ID} --record"'
-                     }
-                }
-            }
-        }
+					}
+				}
+			}
+		}
 	}
  	post {
         	always {
