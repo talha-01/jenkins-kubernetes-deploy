@@ -1,12 +1,14 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: |
-  This Cloudformation Template creates a Kubernetes Cluster on Ubuntu 20.04 of EC2 Instances.
+  This Cloudformation Template creates a Kubernetes Cluster on Ubuntu 20.04 of EC2 Instances and
+  a Jenkins Server on Amazon Linux 2. Jenkins security group allows traffic from port 22 and 8080.
   Kubernetes cluster comprises of one master node and one worker node.
   Once the Master node is up and running, Worker node automatically joins the Cluster.
   Managers security group allows all protocols from all ports within itself and from the Workers.
   Workers security group allows all protocols from all ports within itself and from the Managers.
-  Both Security groups allows SSH (22) connections from anywhere.
-  User needs to select appropriate key name when launching the template.
+  Both Security groups allows SSH (22) connections from anywhere. Worker security group also allows
+  port 30070, which is the port that the application will be using. User needs to select appropriate
+  key name when launching the template.
 Parameters:
   KeyPairName:
     Description: Enter the name of your Key Pair for SSH connections.
